@@ -3,7 +3,10 @@ import { fetchQuizQuestions } from "./API";
 // Components
 import QuestionCard from "./components/QuestionCard";
 // Types
-import { Difficulty, QuestionState } from "./API";
+import { Difficulty, QuestionsState } from "./API";
+
+// styles
+import {GlobalStyle} from "./App.styles"
 
 export type AnswerObject = {
   question: string;
@@ -16,7 +19,7 @@ const TOTAL_QUESTIONS = 10;
 
 function App() {
   const [loading, setLoading] = useState(false);
-  const [questions, setQuestions] = useState<QuestionState[]>([]);
+  const [questions, setQuestions] = useState<QuestionsState[]>([]);
   const [number, sertNumber] = useState(0);
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [score, setScore] = useState(0);
@@ -45,9 +48,9 @@ function App() {
       // Users answer
       const answer = e.currentTarget.value
       // check answer against correct answer
-      const correct = questions[number].correct_answer = answer
+      const correct = questions[number].correct_answer === answer
       // add score if is correct
-      if (correct) setScore(prev => prev + 1)
+      if (correct) setScore((prev) => prev + 1)
       // save answer in the array for user answers
     const answerObject = {
       question: questions[number].question,
@@ -71,6 +74,8 @@ function App() {
   };
 
   return (
+    <>
+    <GlobalStyle />
     <div className="App">
       <h1>REACT QUIZ</h1>
       {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
@@ -79,7 +84,7 @@ function App() {
         </button>
       ) : null}
 
-      {!gameOver ? <p className="score">Score:</p> : null}
+      {!gameOver ? <p className="score">Score: {score}</p> : null}
       {loading && <p>Loading Questions...</p>}
       {!loading && !gameOver && (
         <QuestionCard
@@ -100,7 +105,9 @@ function App() {
         </button>
       ) : null}
     </div>
+    </>
   );
+
 }
 
 export default App;
